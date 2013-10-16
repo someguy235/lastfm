@@ -1,0 +1,136 @@
+* { margin: 0; padding: 0; }
+
+html {
+	text-align: center;
+}
+
+/* GENERAL */
+
+body {
+	text-align: center;
+  background-image: url("/img/wild_flowers.png");
+  /*  background: #444;*/
+  color: #333;
+  font: 11px verdana, arial, helvetica, sans-serif;
+	margin:0 auto;
+  padding:header-<length> 0 footer-<length> 0;
+}
+
+a:link, a:visited, a:hover {
+  color: #666;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+h1{
+	text-align: center;	
+	background: #5686ba;
+	width: 100%;
+}
+
+h2 {
+    color: #5686BA;
+    font-weight: normal;
+    font-size: 18px;
+    margin: .8em 0 .3em 0;
+    /*text-align: center;*/
+}
+
+h3 {
+    color: #000;
+    font-weight: normal;
+    font-size: 14px;
+    margin: .8em 0 .3em 0;
+    /*text-align: center;*/
+}
+
+ul {
+    padding-left: 15px;
+}
+
+input, select, textarea {
+    background-color: #fcfcfc;
+    border: 1px solid #ccc;
+    font: 11px verdana, arial, helvetica, sans-serif;
+    margin: 2px 0;
+    padding: 2px 4px;
+}
+select {
+   padding: 2px 2px 2px 0;
+}
+textarea {
+	width: 250px;
+	height: 150px;
+	vertical-align: top;
+}
+
+input:focus, select:focus, textarea:focus {
+    border: 1px solid #5686BA;
+}
+
+.main {
+	text-align: center;
+  background: #eee;
+  /*width: 100%;*/
+  padding: 10px;
+  /*margin: 1px;*/
+  border: 1px solid #5686BA;
+}
+
+.search {
+	text-align: center;
+  background: #eee;
+  padding: 10px;
+  border: 1px solid #5686BA;
+}	
+
+.tagOutput{
+	padding: 10px 0px 10px 0px;	
+	font-size: 14px;
+	width: 100%;
+}
+.tagRow{
+  padding-top:3px;
+}
+.tagBar{
+	width: 50%;	
+	float: left;
+}
+.tagNameLabel{
+	width: 25%;
+	float: left;
+	margin-top: 5px;
+}
+.tagPctLabel{
+	width: 24%;
+	float: left;
+	text-align: left;
+	margin-top: 5px;
+}
+.footer{
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	text-align: center;
+	color: #5686ba;	
+	padding: 5px;
+}
+.clear {
+  clear: both;
+	height: 0;
+	visibility: hidden;
+}
+.centered {
+	text-align: center;
+}
+.flash{
+	background: #CFC233;
+	font-size: 14px;
+	padding: .3em;
+    margin: .8em 0 .3em 0;
+	
+}
+#chart1{
+  text-align: center;
+}

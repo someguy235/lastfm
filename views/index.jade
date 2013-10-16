@@ -1,0 +1,53 @@
+doctype 5
+html(lang="en")
+  head
+    title= "Last.fm Tag Stats"
+    meta(http-equiv="Content-Type", content="text/html; charset=iso-8859-1")
+    link(rel="stylesheet" href="/css/main.css")
+    link(rel="stylesheet" href="/css/bootstrap.min.css")
+    link(rel="stylesheet" href="/css/nv.d3.css")
+  body
+    div(ng-app="LastFmApp")
+      div.row-fluid(ng-controller="FormController")
+        div.main.centered.span8.offset2
+          form(ng-submit="getResults()")
+            div.row-fluid
+              div.input-append
+                input.span10(ng-model="username" type="text" name="username" placeholder="LastFM Username")
+                button.btn.btn-primary Go!
+            br
+            div.row-fluid.btn-group(data-toggle="buttons-radio")
+              button.btn.btn-primary.active(ng-model="period" value="overall" type="button" buttons-radio="") Overall
+              button.btn.btn-primary(ng-model="period" value="7day" type="button" buttons-radio="") 7 Days
+              button.btn.btn-primary(ng-model="period" value="3month" type="button" buttons-radio="") 3 Months
+              button.btn.btn-primary(ng-model="period" value="6month" type="button" buttons-radio="") 6 Months
+              button.btn.btn-primary(ng-model="period" value="12month" type="button" buttons-radio="") 12 Months
+            br
+            br
+            div.row-fluid.btn-group(data-toggle="buttons-radio")
+              button.btn.btn-primary.active(ng-model="numArtists" value="1" type="button" buttons-radio="") 1 Artist
+              button.btn.btn-primary(ng-model="numArtists" value="5" type="button" buttons-radio="") 5 Artists
+              button.btn.btn-primary(ng-model="numArtists" value="10" type="button" buttons-radio="") 10 Artists
+              button.btn.btn-primary(ng-model="numArtists" value="20" type="button" buttons-radio="") 20 Artists
+
+      div.row-fluid(ng-controller="DisplayController")
+        div.centered.span8.offset2
+          div.main#spinner(ng-show="showSpinner" style="display: none;")
+            img(src="/img/spinner-small.gif")
+            br
+            br
+            | Getting your music (this can take a while...)
+          div.main#error(ng-show="showError" style="display: none;")
+            | Sorry, something went wrong!
+          div.main#chart1(ng-show="showChart")
+            svg(style="width: 900px; height: 500px;")
+
+    script(type="text/javascript" src="/js/jquery-1.7.1.min.js")
+    script(type="text/javascript" src="/js/bootstrap.min.js")
+    script(type="text/javascript" src="/js/angular.min.js")
+    script(type="text/javascript" src="/js/d3.v3.min.js")
+    script(type="text/javascript" src="/js/nv.d3.min.js")
+    script(type="text/javascript" src="/js/controllers.js")
+    //script(type="text/javascript")
+    //  $('.nav-tabs').button()
+
