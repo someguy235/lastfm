@@ -47,10 +47,8 @@ app.post('/lastfm/results', function(req, response){
       var artistPlays = artistNode.playcount
       totalPlays += parseInt(artistPlays)
       var artistTagsURL = APIroot +"?method=artist.gettoptags&artist="+ encodeURIComponent(artistName) +"&api_key="+ APIkey +"&format=json"
-      console.log(artistTagsURL);
       setTimeout(function(){
         request(artistTagsURL, function(err, res, body){
-          console.log(body);
           var tagData = JSON.parse(body)
           var artistTagCount = 0
           var numTags = tagData.toptags.tag.length < 5 ? tagData.toptags.tag.length : 5
