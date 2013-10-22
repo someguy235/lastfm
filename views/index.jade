@@ -3,9 +3,9 @@ html(lang="en")
   head
     title= "Last.fm Tag Stats"
     meta(http-equiv="Content-Type", content="text/html; charset=iso-8859-1")
-    link(rel="stylesheet" href="/css/main.css")
-    link(rel="stylesheet" href="/css/bootstrap.min.css")
-    link(rel="stylesheet" href="/css/nv.d3.css")
+    link(rel="stylesheet" href="/resources/css/main.css")
+    link(rel="stylesheet" href="/resources/css/bootstrap.min.css")
+    link(rel="stylesheet" href="/resources/css/nv.d3.css")
   body
     div(ng-app="LastFmApp")
       div.row-fluid(ng-controller="FormController")
@@ -33,7 +33,7 @@ html(lang="en")
       div.row-fluid(ng-controller="DisplayController")
         div.centered.span8.offset2
           div.main#spinner(ng-show="showSpinner" style="display: none;")
-            img(src="/img/spinner-small.gif")
+            img(src="/resources/img/spinner-small.gif")
             br
             br
             | Getting your music (this can take a while...)
@@ -42,12 +42,12 @@ html(lang="en")
           div.main#chart1(ng-show="showChart")
             svg(style="width: 900px; height: 500px;")
 
-    script(type="text/javascript" src="/js/jquery-1.7.1.min.js")
-    script(type="text/javascript" src="/js/bootstrap.min.js")
-    script(type="text/javascript" src="/js/angular.min.js")
-    script(type="text/javascript" src="/js/d3.v3.min.js")
-    script(type="text/javascript" src="/js/nv.d3.min.js")
-    script(type="text/javascript" src="/js/controllers.js")
+    script(type="text/javascript" src="/resources/js/jquery-1.7.1.min.js")
+    script(type="text/javascript" src="/resources/js/bootstrap.min.js")
+    script(type="text/javascript" src="/resources/js/angular.min.js")
+    script(type="text/javascript" src="/resources/js/d3.v3.min.js")
+    script(type="text/javascript" src="/resources/js/nv.d3.min.js")
+    script(type="text/javascript" src="/resources/js/controllers.js")
     //script(type="text/javascript")
     //  $('.nav-tabs').button()
 

@@ -5,9 +5,8 @@ var async = require('async');
 
 var app = express();
 
-app.use(express.static('resources'));
+app.use('/resources', express.static(__dirname + '/resources'));
 app.use(express.json());
-//app.use(express.static('views'));
 
 app.set("views", __dirname + "/views");
 app.set("view engine", "jade");
@@ -29,7 +28,7 @@ app.post('/lastfm/results', function(req, response){
 
   var APIkey = "503475a6b1d2cafdedf2f69ed4f677c3"
   var APIroot = "http://ws.audioscrobbler.com/2.0/"
-  var topArtistsURL = APIroot +"?method=user.gettopartists&user="+ params.username +"&period="+ params.period +"&api_key="+ APIkey + "&limit="+ params.numArtists +"&format=json"
+  var topArtistsURL = APIroot +"?method=user.gettopartists&user="+ encodeURIComponent(params.username) +"&period="+ params.period +"&api_key="+ APIkey + "&limit="+ params.numArtists +"&format=json"
   var tags = {};
   request(topArtistsURL, function(err, res, body){
     var data = JSON.parse(body),
@@ -47,10 +46,11 @@ app.post('/lastfm/results', function(req, response){
       artistsPlayed.push(artistName)
       var artistPlays = artistNode.playcount
       totalPlays += parseInt(artistPlays)
-      var artistTagsURL = APIroot +"?method=artist.gettoptags&artist="+ artistName +"&api_key="+ APIkey +"&format=json"
-      //var artistTagsURL = encodeURIComponent(APIroot +"?method=artist.gettoptags&artist="+ artistName +"&api_key="+ APIkey)
+      var artistTagsURL = APIroot +"?method=artist.gettoptags&artist="+ encodeURIComponent(artistName) +"&api_key="+ APIkey +"&format=json"
+      console.log(artistTagsURL);
       setTimeout(function(){
         request(artistTagsURL, function(err, res, body){
+          console.log(body);
           var tagData = JSON.parse(body)
           var artistTagCount = 0
           var numTags = tagData.toptags.tag.length < 5 ? tagData.toptags.tag.length : 5

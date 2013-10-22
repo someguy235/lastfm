@@ -65,7 +65,7 @@ LastFmModule.controller("FormController", function($scope, $http, LastFmService)
     console.log(postData);
 
     $http({
-      url: 'results',
+      url: '/lastfm/results',
       method: "POST",
       data: postData,
       headers: {'Content-Type': 'application/json'}
