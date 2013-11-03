@@ -89,4 +89,4 @@ app.post('/lastfm/results', function(req, response){
 });
 
 app.listen(3000);
-console.log("lastfm listening on port 3000");
+console.log(new Date() +": lastfm listening on port 3000");
