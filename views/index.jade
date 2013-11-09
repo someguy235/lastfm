@@ -3,9 +3,9 @@ html(lang="en")
   head
     title= "Last.fm Tag Stats"
     meta(http-equiv="Content-Type", content="text/html; charset=iso-8859-1")
-    link(rel="stylesheet" href="/resources/css/main.css")
-    link(rel="stylesheet" href="/resources/css/bootstrap.min.css")
-    link(rel="stylesheet" href="/resources/css/nv.d3.css")
+    link(rel="stylesheet" href="/lastfm/resources/css/main.css")
+    link(rel="stylesheet" href="/lastfm/resources/css/bootstrap.min.css")
+    link(rel="stylesheet" href="/lastfm/resources/css/nv.d3.css")
   body
     div(ng-app="LastFmApp")
       div.row-fluid(ng-controller="FormController")
@@ -33,21 +33,21 @@ html(lang="en")
       div.row-fluid(ng-controller="DisplayController")
         div.centered.span8.offset2
           div.main#spinner(ng-show="showSpinner" style="display: none;")
-            img(src="/resources/img/spinner-small.gif")
+            img(src="/lastfm/resources/img/spinner-small.gif")
             br
             br
             | Getting your music (this can take a while...)
           div.main#error(ng-show="showError" style="display: none;")
             | Sorry, something went wrong!
-          div.main#chart1(ng-show="showChart")
+          div.main#chart1(ng-show="showChart" style="display: none;")
             svg(style="width: 900px; height: 500px;")
 
-    script(type="text/javascript" src="/resources/js/jquery-1.7.1.min.js")
-    script(type="text/javascript" src="/resources/js/bootstrap.min.js")
-    script(type="text/javascript" src="/resources/js/angular.min.js")
-    script(type="text/javascript" src="/resources/js/d3.v3.min.js")
-    script(type="text/javascript" src="/resources/js/nv.d3.min.js")
-    script(type="text/javascript" src="/resources/js/controllers.js")
+    script(type="text/javascript" src="/lastfm/resources/js/jquery-1.7.1.min.js")
+    script(type="text/javascript" src="/lastfm/resources/js/bootstrap.min.js")
+    script(type="text/javascript" src="/lastfm/resources/js/angular.min.js")
+    script(type="text/javascript" src="/lastfm/resources/js/d3.v3.min.js")
+    script(type="text/javascript" src="/lastfm/resources/js/nv.d3.min.js")
+    script(type="text/javascript" src="/lastfm/resources/js/controllers.js")
     script
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -5,7 +5,7 @@ var async = require('async');
 
 var app = express();
 
-app.use('/resources', express.static(__dirname + '/resources'));
+app.use('/lastfm/resources', express.static(__dirname + '/resources'));
 app.use(express.json());
 
 app.set("views", __dirname + "/views");
