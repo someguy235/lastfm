@@ -3,6 +3,10 @@ var request = require('request');
 var _ = require('underscore');
 var async = require('async');
 
+var dbUrl = "lastfm"
+var collections = ["artists"]
+var db = require("mongojs").connect(dbUrl, collections)
+
 var app = express();
 
 app.use('/lastfm/resources', express.static(__dirname + '/resources'));
@@ -34,7 +38,6 @@ app.post('/lastfm/results', function(req, response){
     var data = JSON.parse(body),
       topArtistsList = data.topartists.artist,
       artistsPlayed = [],
-      tagSum = 0,
       totalPlays = 0
     if( Object.prototype.toString.call( topArtistsList ) !== '[object Array]' ) {
       topArtistsList = new Array(topArtistsList)
@@ -46,33 +49,33 @@ app.post('/lastfm/results', function(req, response){
       artistsPlayed.push(artistName)
       var artistPlays = artistNode.playcount
       totalPlays += parseInt(artistPlays)
-      var artistTagsURL = APIroot +"?method=artist.gettoptags&artist="+ encodeURIComponent(artistName) +"&api_key="+ APIkey +"&format=json"
-      setTimeout(function(){
-        request(artistTagsURL, function(err, res, body){
-          var tagData = JSON.parse(body)
-          var artistTagCount = 0
-          var numTags = tagData.toptags.tag.length < 5 ? tagData.toptags.tag.length : 5
-          
-          for(var tagIdx = 0; tagIdx < numTags; tagIdx++){
-            artistTagCount += parseInt(tagData.toptags.tag[tagIdx].count)
-          }
-          
-          for(var tagIdx=0; tagIdx<numTags; tagIdx++){
-            var tagName = tagData.toptags.tag[tagIdx].name.toLowerCase();
-            var tagCount = tagData.toptags.tag[tagIdx].count;
-            var tagRatio = tagCount/artistTagCount;
-            //var newTagRatio = new TagRatio(tagName: tagName, tagRatio: tagRatio, artist: newArtist).save()
-            //newArtist.addToTagRatios(newTagRatio)
-            var weightedTag = artistPlays * tagRatio
-            if(typeof tags[tagName] == 'undefined'){
-              tags[tagName] = weightedTag
-            }else{
-              tags[tagName] = weightedTag + tags[tagName]
-            }
-          }
+
+      db.artists.find({artist: artistName}, function(err, artist){
+        if(err){
+          console.log("err: "+ err);
+        }else if(!artist.length){
+          console.log("artist not found in cache: "+ artistName);
+          var artistTagsURL = APIroot +"?method=artist.gettoptags&artist="+ encodeURIComponent(artistName) +"&api_key="+ APIkey +"&format=json"
+          setTimeout(function(){
+            request(artistTagsURL, function(err, res, body){
+              var tagData = JSON.parse(body).toptags.tag
+              var numTags = tagData.length < 5 ? tagData.length : 5
+              tagData = tagData.splice(0, numTags);
+              tags = parseTags(tags, tagData, artistPlays);
+
+              db.artists.save({artist: artistName, tagData: tagData}, function(err, saved){
+                if(err || !saved) console.log("artist not saved: "+ err);
+                else console.log("artist saved: "+ saved);
+              });
+              callback();
+            })
+          }, 1000);
+        }else{
+          console.log("artist found in cache: "+ JSON.stringify(artist))
+          tags = parseTags(tags, artist[0].tagData, artistPlays);
           callback();
-        })
-      }, 1000);
+        }
+      });
     }, function(err){
       var returnTags = [{
         key: "Tags",
@@ -83,10 +86,31 @@ app.post('/lastfm/results', function(req, response){
         returnTags[0].values.push({"label": key, "value": tags[key]})
       })
       response.send(returnTags, 200);
-      //response.send(tags, 200);
     });
   })
 });
 
+function parseTags(tags, tagData, artistPlays){
+  console.log("tagData: "+ tagData);
+
+  var artistTagCount = 0
+  for(var tagIdx = 0; tagIdx<tagData.length; tagIdx++){
+    artistTagCount += parseInt(tagData[tagIdx].count)
+  }
+  for(var tagIdx=0; tagIdx<tagData.length; tagIdx++){
+    var tagName = tagData[tagIdx].name.toLowerCase();
+    var tagCount = tagData[tagIdx].count;
+    var tagRatio = tagCount/artistTagCount;
+    var weightedTag = artistPlays * tagRatio
+    if(typeof tags[tagName] == 'undefined'){
+      tags[tagName] = weightedTag
+    }else{
+      tags[tagName] = weightedTag + tags[tagName]
+    }
+  }
+  return tags
+}
+
 app.listen(3000);
 console.log(new Date() +": lastfm listening on port 3000");
+
