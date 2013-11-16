@@ -65,13 +65,12 @@ app.post('/lastfm/results', function(req, response){
 
               db.artists.save({artist: artistName, tagData: tagData}, function(err, saved){
                 if(err || !saved) console.log("artist not saved: "+ err);
-                else console.log("artist saved: "+ saved);
               });
               callback();
             })
           }, 1000);
         }else{
-          console.log("artist found in cache: "+ JSON.stringify(artist))
+          console.log("artist found in cache: "+ artistName);
           tags = parseTags(tags, artist[0].tagData, artistPlays);
           callback();
         }
@@ -91,8 +90,6 @@ app.post('/lastfm/results', function(req, response){
 });
 
 function parseTags(tags, tagData, artistPlays){
-  console.log("tagData: "+ tagData);
-
   var artistTagCount = 0
   for(var tagIdx = 0; tagIdx<tagData.length; tagIdx++){
     artistTagCount += parseInt(tagData[tagIdx].count)
