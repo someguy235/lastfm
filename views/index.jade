@@ -9,7 +9,7 @@ html(lang="en")
   body
     div(ng-app="LastFmApp")
       div.row-fluid(ng-controller="FormController")
-        div.main.centered.span8.offset2
+        div.glass.centered.span8.offset2
           form(ng-submit="getResults()")
             div.row-fluid
               div.input-append
@@ -32,14 +32,14 @@ html(lang="en")
 
       div.row-fluid(ng-controller="DisplayController")
         div.centered.span8.offset2
-          div.main#spinner(ng-show="showSpinner" style="display: none;")
+          div.glass#spinner(ng-show="showSpinner" style="display: none;")
             img(src="/lastfm/resources/img/spinner-small.gif")
             br
             br
             | Getting your music (this can take a while...)
           div.main#error(ng-show="showError" style="display: none;")
             | Sorry, something went wrong!
-          div.main#chart1(ng-show="showChart" style="display: none;")
+          div.glass#chart1(ng-show="showChart" style="display: none; height: 500px;")
             svg(style="width: 900px; height: 500px;")
 
     script(type="text/javascript" src="/lastfm/resources/js/jquery-1.7.1.min.js")
@@ -48,7 +48,7 @@ html(lang="en")
     script(type="text/javascript" src="/lastfm/resources/js/d3.v3.min.js")
     script(type="text/javascript" src="/lastfm/resources/js/nv.d3.min.js")
     script(type="text/javascript" src="/lastfm/resources/js/controllers.js")
-    script
+    script.
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
