@@ -109,7 +109,7 @@ input:focus, select:focus, textarea:focus {
     margin: .8em 0 .3em 0;
 	
 }
-#chart1{
+#chart1 svg{
   text-align: center;
 }
 .glass{
@@ -118,7 +118,7 @@ input:focus, select:focus, textarea:focus {
   border-bottom: 1px solid;
   border-bottom-color: #ccc;
   border-bottom-color: rgba(255, 255, 255, 0.2);
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.3);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   height: 180px;
 }

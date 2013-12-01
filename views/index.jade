@@ -8,15 +8,16 @@ html(lang="en")
     link(rel="stylesheet" href="/lastfm/resources/css/nv.d3.css")
   body
     div(ng-app="LastFmApp")
-      div.row-fluid(ng-controller="FormController")
-        div.glass.centered.span8.offset2
-          form(ng-submit="getResults()")
-            div.row-fluid
-              div.input-append
-                input.span10(ng-model="username" type="text" name="username" placeholder="LastFM Username")
-                button.btn.btn-primary Go!
+      div.row(ng-controller="FormController")
+        div.centered.col-md-8.col-md-offset-2
+          form.glass(ng-submit="getResults()")
+            div.row
+              div.input-group.col-md-4.col-md-offset-4
+                input.form-control(ng-model="username" type="text" name="username" placeholder="LastFM Username")
+                span.input-group-btn
+                  button.btn.btn-primary Go!
             br
-            div.row-fluid.btn-group(data-toggle="buttons-radio")
+            div.row.btn-group(data-toggle="buttons-radio")
               button.btn.btn-primary.active(ng-model="period" value="overall" type="button" buttons-radio="") Overall
               button.btn.btn-primary(ng-model="period" value="7day" type="button" buttons-radio="") 7 Days
               button.btn.btn-primary(ng-model="period" value="3month" type="button" buttons-radio="") 3 Months
@@ -24,15 +25,17 @@ html(lang="en")
               button.btn.btn-primary(ng-model="period" value="12month" type="button" buttons-radio="") 12 Months
             br
             br
-            div.row-fluid.btn-group(data-toggle="buttons-radio")
+            div.row.btn-group(data-toggle="buttons-radio")
               button.btn.btn-primary.active(ng-model="numArtists" value="1" type="button" buttons-radio="") 1 Artist
               button.btn.btn-primary(ng-model="numArtists" value="5" type="button" buttons-radio="") 5 Artists
               button.btn.btn-primary(ng-model="numArtists" value="10" type="button" buttons-radio="") 10 Artists
               button.btn.btn-primary(ng-model="numArtists" value="20" type="button" buttons-radio="") 20 Artists
 
-      div.row-fluid(ng-controller="DisplayController")
-        div.centered.span8.offset2
+      div.row(ng-controller="DisplayController")
+        div.centered.col-md-8.col-md-offset-2
           div.glass#spinner(ng-show="showSpinner" style="display: none;")
+            br
+            br
             img(src="/lastfm/resources/img/spinner-small.gif")
             br
             br
