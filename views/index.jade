@@ -8,6 +8,8 @@ html(lang="en")
     link(rel="stylesheet" href="/lastfm/resources/css/nv.d3.css")
   body
     div(ng-app="LastFmApp")
+      div.row
+        br
       div.row(ng-controller="FormController")
         div.centered.col-md-8.col-md-offset-2
           form.glass(ng-submit="getResults()")
@@ -34,14 +36,12 @@ html(lang="en")
       div.row(ng-controller="DisplayController")
         div.centered.col-md-8.col-md-offset-2
           div.glass#spinner(ng-show="showSpinner" style="display: none;")
-            br
-            br
             img(src="/lastfm/resources/img/spinner-small.gif")
             br
             br
             | Getting your music (this can take a while...)
-          div.main#error(ng-show="showError" style="display: none;")
-            | Sorry, something went wrong!
+          div.glass#error(ng-show="showError" style="display: none;")
+            | {{errorText}} 
           div.glass#chart1(ng-show="showChart" style="display: none; height: 500px;")
             svg(style="width: 900px; height: 500px;")
 

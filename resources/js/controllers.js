@@ -12,6 +12,7 @@ LastFmModule.factory('LastFmService', function(){
     events: events,
     showSpinner: showSpinner,
     showError: showError,
+    errorText: "",
     showChart: showChart
   }
   return service
@@ -29,14 +30,16 @@ LastFmModule.directive('buttonsRadio', function() {
     restrict: 'A',
     require: 'ngModel',
     link: function($scope, element, attr, ctrl) {
-      element.bind('click', function() {
+      element.bind('click', function(e) {
         $scope.$apply(function(scope) {
           ctrl.$setViewValue(attr.value);
         });
+        e.stopPropagation();
       });
 
       // This should just be added once, but is added for each radio input now?
       $scope.$watch(attr.ngModel, function(newValue, oldValue) {
+        //console.log(newValue);
         element.parent(".btn-group").find('button').removeClass("active");
         element.parent(".btn-group") //.children()
         .find("button[value='" + newValue + "']").addClass('active');
@@ -55,14 +58,14 @@ LastFmModule.controller("FormController", function($scope, $http, LastFmService)
     LastFmService.showError = false;
     LastFmService.showChart = false;
     LastFmService.username = $scope.username;
-    console.log("getResults()");
+    //console.log("getResults()");
 
     postData = {
       "username": $scope.username,
       "period": $scope.period,
       "numArtists": $scope.numArtists
     }
-    console.log(postData);
+    //console.log(postData);
 
     $http({
       url: '/lastfm/results',
@@ -71,42 +74,31 @@ LastFmModule.controller("FormController", function($scope, $http, LastFmService)
       headers: {'Content-Type': 'application/json'}
     }).success(function (data, status, headers, config) {
       LastFmService.showSpinner = false;
-      LastFmService.showChart = true;
-      LastFmService.events = data;
+      if(data.length > 0){
+        LastFmService.showChart = true;
+        LastFmService.events = data;
 
-      console.log("success");
-      console.log(data);
-      nv.addGraph(function() {
-        //var chart = nv.models.multiBarChart()
-        //var chart = nv.models.stackedAreaChart()
-        //var chart = nv.models.lineWithFocusChart()
-        var chart = nv.models.pieChart()
-          //.x(function(d) { return d[0] })
-          .x(function(d) { return d.label; })
-          //.y(function(d) { return d[1] })
-          .y(function(d) { return d.value; })
-          //.showControls(false).stacked(true)
-          .showLabels(true)
-          .labelThreshold(.05)
-          .donut(true)
-        /*
-        chart.xAxis
-          .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
-        chart.x2Axis
-          .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
-        chart.yAxis
-          .tickFormat(d3.format(',.1f'));
-        */
-        d3.select('#chart1 svg')
-          .datum(data[0].values)
-          .transition().duration(500).call(chart)
-        //nv.utils.windowResize(chart.update);
-        return chart;
-      });
+        nv.addGraph(function() {
+          var chart = nv.models.pieChart()
+            .x(function(d) { return d.label; })
+            .y(function(d) { return d.value; })
+            .showLabels(true)
+            .labelThreshold(.05)
+            .donut(true)
+          d3.select('#chart1 svg')
+            .datum(data[0].values)
+            .transition().duration(500).call(chart)
+          return chart;
+        });
+      }else{
+        LastFmService.showError = true;
+        LastFmService.errorText = "No artists found in that time range.";
+      }
     }).error(function (data, status, headers, config) {
       LastFmService.showSpinner = false;
       LastFmService.showError = true;
-      console.log("error")
+      LastFmService.errorText = "Sorry, something went wrong.";
+      //console.log("error")
     });
   }
 })
@@ -115,6 +107,7 @@ LastFmModule.controller("DisplayController", function($scope, $http, LastFmServi
   $scope.LastFmService = LastFmService;
   $scope.showSpinner = LastFmService.showSpinner;
   $scope.showError = LastFmService.showError;
+  $scope.errorText = LastFmService.errorText;
   $scope.showChart = LastFmService.showChart;
   $scope.username = LastFmService.username;
   
@@ -123,6 +116,9 @@ LastFmModule.controller("DisplayController", function($scope, $http, LastFmServi
   })
   $scope.$watch('LastFmService.showError', function(newVal, oldVal, scope){
     $scope.showError = newVal;
+  })
+  $scope.$watch('LastFmService.errorText', function(newVal, oldVal, scope){
+    $scope.errorText = newVal;
   })
   $scope.$watch('LastFmService.showChart', function(newVal, oldVal, scope){
     $scope.showChart = newVal;

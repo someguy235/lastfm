@@ -39,53 +39,58 @@ app.post('/lastfm/results', function(req, response){
       topArtistsList = data.topartists.artist,
       artistsPlayed = [],
       totalPlays = 0
-    if( Object.prototype.toString.call( topArtistsList ) !== '[object Array]' ) {
+    console.log("list:"+ topArtistsList +":");
+    if( Object.prototype.toString.call( topArtistsList ) !== '[object Array]'  && typeof topArtistsList !== 'undefined') {
       topArtistsList = new Array(topArtistsList)
     }
-    var numArtistsPlayed = topArtistsList.length < params.numArtists ? topArtistsList.length : params.numArtists
+    //var numArtistsPlayed = topArtistsList.length < params.numArtists ? topArtistsList.length : params.numArtists
 
-    async.eachSeries(topArtistsList, function(artistNode, callback){
-      var artistName  = artistNode.name
-      artistsPlayed.push(artistName)
-      var artistPlays = artistNode.playcount
-      totalPlays += parseInt(artistPlays)
+    if(typeof topArtistsList !== 'undefined'){
+      async.eachSeries(topArtistsList, function(artistNode, callback){
+        var artistName  = artistNode.name
+        artistsPlayed.push(artistName)
+        var artistPlays = artistNode.playcount
+        totalPlays += parseInt(artistPlays)
 
-      db.artists.find({artist: artistName}, function(err, artist){
-        if(err){
-          console.log("err: "+ err);
-        }else if(!artist.length){
-          console.log("artist not found in cache: "+ artistName);
-          var artistTagsURL = APIroot +"?method=artist.gettoptags&artist="+ encodeURIComponent(artistName) +"&api_key="+ APIkey +"&format=json"
-          setTimeout(function(){
-            request(artistTagsURL, function(err, res, body){
-              var tagData = JSON.parse(body).toptags.tag
-              var numTags = tagData.length < 5 ? tagData.length : 5
-              tagData = tagData.splice(0, numTags);
-              tags = parseTags(tags, tagData, artistPlays);
+        db.artists.find({artist: artistName}, function(err, artist){
+          if(err){
+            console.log("err: "+ err);
+          }else if(!artist.length){
+            console.log("artist not found in cache: "+ artistName);
+            var artistTagsURL = APIroot +"?method=artist.gettoptags&artist="+ encodeURIComponent(artistName) +"&api_key="+ APIkey +"&format=json"
+            setTimeout(function(){
+              request(artistTagsURL, function(err, res, body){
+                var tagData = JSON.parse(body).toptags.tag
+                var numTags = tagData.length < 5 ? tagData.length : 5
+                tagData = tagData.splice(0, numTags);
+                tags = parseTags(tags, tagData, artistPlays);
 
-              db.artists.save({artist: artistName, tagData: tagData}, function(err, saved){
-                if(err || !saved) console.log("artist not saved: "+ err);
-              });
-              callback();
-            })
-          }, 1000);
-        }else{
-          console.log("artist found in cache: "+ artistName);
-          tags = parseTags(tags, artist[0].tagData, artistPlays);
-          callback();
-        }
+                db.artists.save({artist: artistName, tagData: tagData}, function(err, saved){
+                  if(err || !saved) console.log("artist not saved: "+ err);
+                });
+                callback();
+              })
+            }, 1000);
+          }else{
+            console.log("artist found in cache: "+ artistName);
+            tags = parseTags(tags, artist[0].tagData, artistPlays);
+            callback();
+          }
+        });
+      }, function(err){
+        var returnTags = [{
+          key: "Tags",
+          values: []
+        }]
+        _.each(tags, function(val, key){
+          tags[key] = Math.round(tags[key] / totalPlays * 100 * 100) / 100;
+          returnTags[0].values.push({"label": key, "value": tags[key]})
+        })
+        response.send(returnTags, 200);
       });
-    }, function(err){
-      var returnTags = [{
-        key: "Tags",
-        values: []
-      }]
-      _.each(tags, function(val, key){
-        tags[key] = Math.round(tags[key] / totalPlays * 100 * 100) / 100;
-        returnTags[0].values.push({"label": key, "value": tags[key]})
-      })
-      response.send(returnTags, 200);
-    });
+    }else{
+      response.send([], 200);
+    }
   })
 });
 
