@@ -92,7 +92,8 @@ LastFmModule.controller("FormController", function($scope, $http, LastFmService)
         });
       }else{
         LastFmService.showError = true;
-        LastFmService.errorText = "No artists found in that time range.";
+        //LastFmService.errorText = "No artists found in that time range.";
+        LastFmService.errorText = "Sorry, something went wrong.";
       }
     }).error(function (data, status, headers, config) {
       LastFmService.showSpinner = false;

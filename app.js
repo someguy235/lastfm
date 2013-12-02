@@ -36,10 +36,12 @@ app.post('/lastfm/results', function(req, response){
   var tags = {};
   request(topArtistsURL, function(err, res, body){
     var data = JSON.parse(body),
-      topArtistsList = data.topartists.artist,
       artistsPlayed = [],
-      totalPlays = 0
-    console.log("list:"+ topArtistsList +":");
+      totalPlays = 0,
+      topArtistsList
+    if(typeof data.topartists !== 'undefined'){
+      var topArtistsList = data.topartists.artist
+    }
     if( Object.prototype.toString.call( topArtistsList ) !== '[object Array]'  && typeof topArtistsList !== 'undefined') {
       topArtistsList = new Array(topArtistsList)
     }
