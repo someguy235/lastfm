@@ -34,9 +34,13 @@ app.post('/lastfm/results', function(req, response){
   var APIroot = "http://ws.audioscrobbler.com/2.0/"
   var topArtistsURL = APIroot +"?method=user.gettopartists&user="+ encodeURIComponent(params.username) +"&period="+ params.period +"&api_key="+ APIkey + "&limit="+ params.numArtists +"&format=json"
   var tags = {};
+  var nodes = [];
+  var links = [];
+
   request(topArtistsURL, function(err, res, body){
     var data = JSON.parse(body),
       artistsPlayed = [],
+      tagsPlayed = [],
       totalPlays = 0,
       topArtistsList
     if(typeof data.topartists !== 'undefined'){
@@ -75,14 +79,43 @@ app.post('/lastfm/results', function(req, response){
             }, 1000);
           }else{
             console.log("artist found in cache: "+ artistName);
-            tags = parseTags(tags, artist[0].tagData, artistPlays);
+            //tags = parseTags(tags, artist[0].tagData, artistPlays);
+            var weightedTags = parseTags(tags, artist[0].tagData, artistPlays);
+            //console.log(weightedTags);
+
+            _.each(weightedTags, function(val, key){
+              if(_.indexOf(tagsPlayed, key) < 0){
+                tagsPlayed.push(key);
+              }
+              
+              var link = {
+                source: _.indexOf(artistsPlayed, artistName),
+                target: _.indexOf(tagsPlayed, key) + topArtistsList.length,
+                value: val
+              }
+              links.push(link)
+
+              if(typeof tags[key] == 'undefined'){
+                tags[key] = val
+              }else{
+                tags[key] = val + tags[key]
+              }
+            })
             callback();
           }
         });
       }, function(err){
+        var returnNodes = [];
+        _.each((_.union(artistsPlayed, tagsPlayed)), function(val){
+          returnNodes.push({
+            name: val
+          })
+        })
         var returnTags = [{
           key: "Tags",
-          values: []
+          values: [],
+          nodes: returnNodes,
+          links: links
         }]
         _.each(tags, function(val, key){
           tags[key] = Math.round(tags[key] / totalPlays * 100 * 100) / 100;
@@ -98,6 +131,7 @@ app.post('/lastfm/results', function(req, response){
 
 function parseTags(tags, tagData, artistPlays){
   var artistTagCount = 0
+  var parsedTags = {};
   for(var tagIdx = 0; tagIdx<tagData.length; tagIdx++){
     artistTagCount += parseInt(tagData[tagIdx].count)
   }
@@ -106,13 +140,17 @@ function parseTags(tags, tagData, artistPlays){
     var tagCount = tagData[tagIdx].count;
     var tagRatio = tagCount/artistTagCount;
     var weightedTag = artistPlays * tagRatio
+    parsedTags[tagName] = weightedTag;
+    /*
     if(typeof tags[tagName] == 'undefined'){
       tags[tagName] = weightedTag
     }else{
       tags[tagName] = weightedTag + tags[tagName]
     }
+    */
   }
-  return tags
+  //return tags
+  return parsedTags
 }
 
 app.listen(3000);

@@ -139,3 +139,24 @@ input:focus, select:focus, textarea:focus {
   filter: blur(5px);
 }
 
+.node rect {
+  cursor: move;
+  fill-opacity: .9;
+  shape-rendering: crispEdges;
+}
+
+.node text {
+  pointer-events: none;
+  text-color: #000;
+  /*text-shadow: 0 1px 0 #fff;*/
+}
+
+.link {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: .2;
+}
+
+.link:hover {
+  stroke-opacity: .5;
+}

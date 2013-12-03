@@ -44,11 +44,16 @@ html(lang="en")
             | {{errorText}} 
           div.glass#chart1(ng-show="showChart" style="display: none; height: 500px;")
             svg(style="width: 900px; height: 500px;")
+          div.glass#chart2(ng-show="showChart" style="display: none; height: 500px;")
+            svg(style="width: 900px; height: 500px;")
+      div.row
+        br
 
     script(type="text/javascript" src="/lastfm/resources/js/jquery-1.7.1.min.js")
     script(type="text/javascript" src="/lastfm/resources/js/bootstrap.min.js")
     script(type="text/javascript" src="/lastfm/resources/js/angular.min.js")
     script(type="text/javascript" src="/lastfm/resources/js/d3.v3.min.js")
+    script(type="text/javascript" src="/lastfm/resources/js/sankey.js")
     script(type="text/javascript" src="/lastfm/resources/js/nv.d3.min.js")
     script(type="text/javascript" src="/lastfm/resources/js/controllers.js")
     script.
