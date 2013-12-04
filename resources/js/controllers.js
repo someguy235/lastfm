@@ -54,9 +54,11 @@ LastFmModule.controller("FormController", function($scope, $http, LastFmService)
   $scope.numArtists = "1";
 
   //TODO: move all this stuff to the display controller
-  var margin = {top: 1, right: 1, bottom: 20, left: 10},
-      width = 900 - margin.left - margin.right,
+  var margin = {top: 1, right: 10, bottom: 20, left: 10},
+      fWidth = parseInt(d3.select("#form").style("width"), 10),
+      width = fWidth - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
+      console.log(fWidth)
 
   var formatNumber = d3.format(",.0f"),
       format = function(d) { return formatNumber(d) + " plays"; },

@@ -12,7 +12,7 @@ html(lang="en")
         br
       div.row(ng-controller="FormController")
         div.centered.col-md-8.col-md-offset-2
-          form.glass(ng-submit="getResults()")
+          form.glass#form(ng-submit="getResults()")
             div.row
               div.input-group.col-md-4.col-md-offset-4
                 input.form-control(ng-model="username" type="text" name="username" placeholder="LastFM Username")
