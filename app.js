@@ -69,19 +69,36 @@ app.post('/lastfm/results', function(req, response){
                 var tagData = JSON.parse(body).toptags.tag
                 var numTags = tagData.length < 5 ? tagData.length : 5
                 tagData = tagData.splice(0, numTags);
-                tags = parseTags(tags, tagData, artistPlays);
+                var weightedTags = parseTags(tags, tagData, artistPlays);
 
                 db.artists.save({artist: artistName, tagData: tagData}, function(err, saved){
                   if(err || !saved) console.log("artist not saved: "+ err);
                 });
+
+                _.each(weightedTags, function(val, key){
+                  if(_.indexOf(tagsPlayed, key) < 0){
+                    tagsPlayed.push(key);
+                  }
+                  
+                  var link = {
+                    source: _.indexOf(artistsPlayed, artistName),
+                    target: _.indexOf(tagsPlayed, key) + topArtistsList.length,
+                    value: val
+                  }
+                  links.push(link)
+
+                  if(typeof tags[key] == 'undefined'){
+                    tags[key] = val
+                  }else{
+                    tags[key] = val + tags[key]
+                  }
+                })
                 callback();
               })
             }, 1000);
           }else{
             console.log("artist found in cache: "+ artistName);
-            //tags = parseTags(tags, artist[0].tagData, artistPlays);
             var weightedTags = parseTags(tags, artist[0].tagData, artistPlays);
-            //console.log(weightedTags);
 
             _.each(weightedTags, function(val, key){
               if(_.indexOf(tagsPlayed, key) < 0){
@@ -141,15 +158,7 @@ function parseTags(tags, tagData, artistPlays){
     var tagRatio = tagCount/artistTagCount;
     var weightedTag = artistPlays * tagRatio
     parsedTags[tagName] = weightedTag;
-    /*
-    if(typeof tags[tagName] == 'undefined'){
-      tags[tagName] = weightedTag
-    }else{
-      tags[tagName] = weightedTag + tags[tagName]
-    }
-    */
   }
-  //return tags
   return parsedTags
 }
 
