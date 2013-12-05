@@ -49,7 +49,7 @@ LastFmModule.directive('buttonsRadio', function() {
 });
 
 LastFmModule.controller("FormController", function($scope, $http, LastFmService){
-  $scope.username = "who_am_i";
+  $scope.username = "";
   $scope.period = "overall";
   $scope.numArtists = "1";
 
@@ -58,7 +58,6 @@ LastFmModule.controller("FormController", function($scope, $http, LastFmService)
       fWidth = parseInt(d3.select("#form").style("width"), 10),
       width = fWidth - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
-      console.log(fWidth)
 
   var formatNumber = d3.format(",.0f"),
       format = function(d) { return formatNumber(d) + " plays"; },
@@ -140,11 +139,12 @@ LastFmModule.controller("FormController", function($scope, $http, LastFmService)
           .enter().append("g")
             .attr("class", "node")
             .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+            /*
           .call(d3.behavior.drag()
             .origin(function(d) { return d; })
             .on("dragstart", function() { this.parentNode.appendChild(this); })
             .on("drag", dragmove));
-
+            */
         node.append("rect")
             .attr("height", function(d) { return d.dy; })
             .attr("width", sankey.nodeWidth())
@@ -163,13 +163,13 @@ LastFmModule.controller("FormController", function($scope, $http, LastFmService)
           .filter(function(d) { return d.x < width / 2; })
             .attr("x", 6 + sankey.nodeWidth())
             .attr("text-anchor", "start");
-       
+       /*
           function dragmove(d) {
             d3.select(this).attr("transform", "translate(" + d.x + "," + (d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))) + ")");
             sankey.relayout();
             link.attr("d", path);
           }
-      
+      */
 
 
 
